@@ -17,6 +17,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+nnoremap <C-e> 5<C-e>
+nnoremap <C-y> 5<C-y>
+
 " Refactor word under cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
 set inccommand=nosplit " Live updating when refactoring
@@ -38,6 +41,7 @@ Plug 'tpope/vim-dispatch' " dispatch asynchronous commands
 
 " Git goodies
 Plug 'tpope/vim-fugitive'
+" Plug 'lambdalisue/gina.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
@@ -128,7 +132,7 @@ nnoremap <leader>no :NERDTreeFocus<CR>
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeShowHidden=1 " Show dotfiles
 let NERDTreeMinimalUI=1
-let NERDTreeQuitOnOpen=1
+" let NERDTreeQuitOnOpen=1
 
 " easymotion
 nmap s <Plug>(easymotion-overwin-f)
