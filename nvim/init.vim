@@ -1,16 +1,10 @@
-" Set language for neovim
-" language en_US
-
 " REMAPS
-let mapleader = "," " Remap leader to ,
+let mapleader = ' ' " Remap leader to space
 
 " NAVIGATION
 " Center cursor when scrolling
 nnoremap <C-d> <C-d>zz
 nnoremap <C-u> <C-u>zz
-" Move short hops with shift-jk
-" nnoremap <M-j> 5j
-" nnoremap <M-k> 5k
 " Change windows width ctrl-hjkl
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
@@ -19,6 +13,13 @@ nnoremap <C-l> <C-w>l
 
 nnoremap <C-e> 5<C-e>
 nnoremap <C-y> 5<C-y>
+
+:command WQ wq
+:command Wq wq
+:command W w
+:command Q q
+
+nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
 " Refactor word under cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
@@ -37,22 +38,16 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'tpope/vim-dispatch' " dispatch asynchronous commands
-
-" Git goodies
+" Git
 Plug 'tpope/vim-fugitive'
 " Plug 'lambdalisue/gina.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-" Autocomplete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-
 Plug 'sheerun/vim-polyglot' " Better syntax highligting for a bunch of languages
 
 " Search
-Plug 'ctrlpvim/ctrlp.vim'   " Fuzzy file search
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mileszs/ack.vim'      " Search in files
 
 " Statusbar
@@ -61,7 +56,10 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'scrooloose/nerdtree'
 
-Plug 'w0rp/ale' " asynchronous linting
+" asynchronous linting
+" autocomplete
+" go to definition
+Plug 'w0rp/ale', { 'do': 'npm install -g typescript' }
 
 Plug 'tpope/vim-commentary'
 
@@ -72,40 +70,35 @@ Plug 'easymotion/vim-easymotion'
 
 Plug 'tpope/vim-surround'
 
-Plug 'editorconfig/editorconfig-vim'
-
 Plug 'mhinz/vim-startify'
 
 Plug 'machakann/vim-highlightedyank'
 
 Plug 'Yggdroot/indentline'
 
-Plug 'jiangmiao/auto-pairs'
-
-" Colorschemes
-Plug 'morhetz/gruvbox'
-Plug 'fcpg/vim-farout'
-
 call plug#end()
 
 " START PLUGIN CONFIGURATIONS
+
+" fzf
+" noremap <c-p> :FZF<CR>
+
+" indentline
+let g:indentLine_setConceal=0
 
 " fugitive
 nnoremap <leader>gd :Gdiff<CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gc :Gcommit<CR>
-nnoremap <leader>gb :Git checkout -b<Space>
-nnoremap <leader>go :Git checkout<Space>
-nnoremap <leader>gpl :Dispatch! git pull<CR>
-
-" deoplete and mucomplete
-let g:deoplete#enable_at_startup=1
-let g:deoplete#file#enable_buffer_path=1
-" deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+nnoremap <leader>gb :Gblame<CR>
 
 " ale
-let g:ale_linters={'javascript': ['eslint']} " Only use eslint
+let g:ale_linters={'javascript': ['eslint', 'tsserver']} " Only use eslint
+let g:ale_completion_enabled = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+nmap <leader>an <Plug>(ale_next_wrap)
+nmap <leader>ap <Plug>(ale_previous_wrap)
+nmap <leader>af <Plug>(ale_first)
 
 " ctrlp
 let g:ctrlp_custom_ignore='node_modules\|DS_Store\|git\|.happypack\|es5\|dist'
@@ -114,14 +107,12 @@ let g:ctrlp_working_path_mode=0
 
 " ultisnips
 let g:UltiSnipsExpandTrigger="<c-s>"
-" let g:UltiSnipsJumpForwardTrigger = '<tab>'
-" let g:UltiSnipsJumpBackwardTrigger = '<S-tab>'
 set runtimepath+=~/.vim/CustomSnippets
 let g:UltiSnipsSnippetsDir="~/.vim/CustomSnippets/UltiSnips"
 let g:UltiSnipsEditSplit="vertical"
 
 " airline
-let g:airline_theme='gruvbox'
+let g:airline_theme='wombat'
 let g:airline_powerline_fonts=1
 
 " nerdtree
@@ -132,23 +123,19 @@ nnoremap <leader>no :NERDTreeFocus<CR>
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeShowHidden=1 " Show dotfiles
 let NERDTreeMinimalUI=1
+let NERDTreeWinSize=40
 " let NERDTreeQuitOnOpen=1
 
 " easymotion
 nmap s <Plug>(easymotion-overwin-f)
 
-" editorconfig
-" To make it play nice with fugitive
-let g:EditorConfig_exclude_patterns=['fugitive://.*']
+" startify
+let g:startify_change_to_dir=0
 
 " END PLUGIN CONFIGURATIONS
 
-if (has("termguicolors"))
- set termguicolors
-endif
 set background=dark
-" let g:gruvbox_contrast_dark='hard'
-colorscheme gruvbox
+hi Comment ctermfg=DarkGray
 
 set clipboard=unnamedplus      " Use the systems clipboard
 set number relativenumber
@@ -159,8 +146,8 @@ set scrolloff=8            " Show context around cursor
 set ignorecase
 set smartcase
 set expandtab              " Use spaces instead of tabs.
-set softtabstop=2         " Tab key indents by 2 spaces.
-set shiftwidth=2         " >> indents by 2 spaces.
+set softtabstop=2          " Tab key indents by 2 spaces.
+set shiftwidth=2           " >> indents by 2 spaces.
 set shiftround             " >> indents to next multiple of 'shiftwidth'.
 
 set hidden                 " Switch between buffers without having to save first.
@@ -173,7 +160,12 @@ set splitright             " Open new windows right of the current window.
 set cursorline             " Find the current line quickly.
 
 set wrapscan               " Searches wrap around end-of-file.
-set report=0         " Always report changed lines.
+set report=0               " Always report changed lines.
+
+set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
+set wildignore+=*.pdf,*.psd
+set wildignore+=node_modules/*,bower_components/*
+set wildignore+=dist/*,server-dist/*
 
 set list                   " Show non-printable characters.
 if has('multi_byte') && &encoding ==# 'utf-8'
