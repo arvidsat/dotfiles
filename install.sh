@@ -15,10 +15,12 @@ rm -rf alacritty
 
 # oh-my-zsh
 sh -c '$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
-ln -sv '~/dotfiles/zsh/.zshrc' '~'
+ln -sv ~/dotfiles/zsh/.zshrc ~
 
 # VIM
 curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-ln -sv '~/dotfiles/nvim/init.vim' '~/.config/nvim/'
+ln -sv ~/dotfiles/nvim/init.vim ~/.config/nvim/
 
+# TMUX
+ln -sv ~/dotfiles/tmux/.tmux.conf ~
