@@ -47,8 +47,11 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'sheerun/vim-polyglot' " Better syntax highligting for a bunch of languages
 
 " Search
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mileszs/ack.vim'      " Search in files
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Statusbar
 Plug 'vim-airline/vim-airline'
@@ -56,8 +59,10 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'scrooloose/nerdtree'
 
-" asynchronous linting
 " autocomplete
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" asynchronous linting
 " go to definition
 Plug 'w0rp/ale', { 'do': 'npm install -g typescript' }
 
@@ -81,7 +86,8 @@ call plug#end()
 " START PLUGIN CONFIGURATIONS
 
 " fzf
-" noremap <c-p> :FZF<CR>
+let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+noremap <c-p> :FZF<CR>
 
 " indentline
 let g:indentLine_setConceal=0
@@ -92,18 +98,21 @@ nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gb :Gblame<CR>
 
-" ale
-let g:ale_linters={'javascript': ['eslint', 'tsserver']} " Only use eslint
-let g:ale_completion_enabled = 1
+" deoplete
+let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+" ale
+let g:ale_linters={'javascript': ['eslint', 'tsserver']}
 nmap <leader>an <Plug>(ale_next_wrap)
 nmap <leader>ap <Plug>(ale_previous_wrap)
 nmap <leader>af <Plug>(ale_first)
+nmap <leader>ad :ALEGoToDefinition<CR>
 
 " ctrlp
-let g:ctrlp_custom_ignore='node_modules\|DS_Store\|git\|.happypack\|es5\|dist'
-let g:ctrlp_show_hidden=1
-let g:ctrlp_working_path_mode=0
+" let g:ctrlp_custom_ignore='node_modules\|DS_Store\|git\|.happypack\|es5\|dist'
+" let g:ctrlp_show_hidden=1
+" let g:ctrlp_working_path_mode=0
 
 " ultisnips
 let g:UltiSnipsExpandTrigger="<c-s>"
