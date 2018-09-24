@@ -14,10 +14,10 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-e> 5<C-e>
 nnoremap <C-y> 5<C-y>
 
-:command WQ wq
-:command Wq wq
-:command W w
-:command Q q
+:command! WQ wq
+:command! Wq wq
+:command! W w
+:command! Q q
 
 nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
 
@@ -81,6 +81,9 @@ Plug 'machakann/vim-highlightedyank'
 
 Plug 'Yggdroot/indentline'
 
+" Plug 'nerdypepper/vim-colors-plain'
+Plug 'pbrisbin/vim-colors-off'
+
 call plug#end()
 
 " START PLUGIN CONFIGURATIONS
@@ -88,6 +91,7 @@ call plug#end()
 " fzf
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 noremap <c-p> :FZF<CR>
+noremap <c-s> :Ag<CR>
 
 " indentline
 let g:indentLine_setConceal=0
@@ -121,8 +125,76 @@ let g:UltiSnipsSnippetsDir="~/.vim/CustomSnippets/UltiSnips"
 let g:UltiSnipsEditSplit="vertical"
 
 " airline
-let g:airline_theme='wombat'
+let g:airline_theme='simple'
 let g:airline_powerline_fonts=1
+" statusline
+" let g:currentmode={
+"   \ 'n'  : 'NORMAL ',
+"   \ 'no' : 'N·OPERATOR PENDING ',
+"   \ 'v'  : 'VISUAL ',
+"   \ 'V'  : 'V·LINE ',
+"   \ '' : 'V·BLOCK ',
+"   \ 's'  : 'SELECT ',
+"   \ 'S'  : 'S·LINE ',
+"   \ '' : 'S·BLOCK ',
+"   \ 'i'  : 'INSERT ',
+"   \ 'R'  : 'REPLACE ',
+"   \ 'Rv' : 'V·REPLACE ',
+"   \ 'c'  : 'COMMAND ',
+"   \ 'cv' : 'VIM EX ',
+"   \ 'ce' : 'EX ',
+"   \ 'r'  : 'PROMPT ',
+"   \ 'rm' : 'MORE ',
+"   \ 'r?' : 'CONFIRM ',
+"   \ '!'  : 'SHELL ',
+"   \ 't'  : 'TERMINAL '}
+
+" set statusline=
+" set statusline+=%{ChangeStatuslineColor()}               " Changing the statusline color
+" set statusline+=%0*\ %{g:currentmode[mode()]}
+" set statusline+=%8*\ %{StatuslineGit()}
+"
+" set statusline+=\ %t
+" set statusline+=%(%m%)
+" set statusline+=%=
+" set statusline+=\ Ln
+" set statusline+=\ %l
+" set statusline+=,Col
+" set statusline+=\ %c
+" set statusline+=\ %Y
+
+" hi User1 ctermfg=008
+" hi User2 ctermfg=008
+" hi User3 ctermfg=008
+" hi User4 ctermfg=008
+" hi User5 ctermfg=008
+" hi User7 ctermfg=008
+" hi User8 ctermfg=008
+" hi User9 ctermfg=007
+
+" " Automatically change the statusline color depending on mode
+" function! ChangeStatuslineColor()
+"   if (mode() =~# '\v(n|no)')
+"     exe 'hi! StatusLine ctermfg=008'
+"   elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
+"     exe 'hi! StatusLine ctermfg=005'
+"   elseif (mode() ==# 'i')
+"     exe 'hi! StatusLine ctermfg=004'
+"   else
+"     exe 'hi! StatusLine ctermfg=006'
+"   endif
+
+"   return ''
+" endfunction
+
+" function! GitBranch()
+"   return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
+" endfunction
+
+" function! StatuslineGit()
+"   let l:branchname = GitBranch()
+"   return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
+" endfunction
 
 " nerdtree
 nnoremap <C-n> :NERDTreeToggle<CR>
@@ -143,8 +215,10 @@ let g:startify_change_to_dir=0
 
 " END PLUGIN CONFIGURATIONS
 
+" color
 set background=dark
-hi Comment ctermfg=DarkGray
+colorscheme off
+" hi Comment ctermfg=DarkGray
 
 set clipboard=unnamedplus      " Use the systems clipboard
 set number relativenumber
