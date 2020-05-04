@@ -60,7 +60,8 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
 
 " autocomplete
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " asynchronous linting
 " go to definition
@@ -81,8 +82,7 @@ Plug 'machakann/vim-highlightedyank'
 
 Plug 'Yggdroot/indentline'
 
-" Plug 'nerdypepper/vim-colors-plain'
-Plug 'pbrisbin/vim-colors-off'
+Plug 'jacoborus/tender.vim'
 
 call plug#end()
 
@@ -103,8 +103,39 @@ nnoremap <leader>gc :Gcommit<CR>
 nnoremap <leader>gb :Gblame<CR>
 
 " deoplete
-let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" let g:deoplete#enable_at_startup = 1
+" inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+
+" coc
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
+
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use K to show documentation in preview window.
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
 
 " ale
 let g:ale_linters={'javascript': ['eslint', 'tsserver']}
@@ -125,76 +156,8 @@ let g:UltiSnipsSnippetsDir="~/.vim/CustomSnippets/UltiSnips"
 let g:UltiSnipsEditSplit="vertical"
 
 " airline
-let g:airline_theme='simple'
+let g:airline_theme='tender'
 let g:airline_powerline_fonts=1
-" statusline
-" let g:currentmode={
-"   \ 'n'  : 'NORMAL ',
-"   \ 'no' : 'N·OPERATOR PENDING ',
-"   \ 'v'  : 'VISUAL ',
-"   \ 'V'  : 'V·LINE ',
-"   \ '' : 'V·BLOCK ',
-"   \ 's'  : 'SELECT ',
-"   \ 'S'  : 'S·LINE ',
-"   \ '' : 'S·BLOCK ',
-"   \ 'i'  : 'INSERT ',
-"   \ 'R'  : 'REPLACE ',
-"   \ 'Rv' : 'V·REPLACE ',
-"   \ 'c'  : 'COMMAND ',
-"   \ 'cv' : 'VIM EX ',
-"   \ 'ce' : 'EX ',
-"   \ 'r'  : 'PROMPT ',
-"   \ 'rm' : 'MORE ',
-"   \ 'r?' : 'CONFIRM ',
-"   \ '!'  : 'SHELL ',
-"   \ 't'  : 'TERMINAL '}
-
-" set statusline=
-" set statusline+=%{ChangeStatuslineColor()}               " Changing the statusline color
-" set statusline+=%0*\ %{g:currentmode[mode()]}
-" set statusline+=%8*\ %{StatuslineGit()}
-"
-" set statusline+=\ %t
-" set statusline+=%(%m%)
-" set statusline+=%=
-" set statusline+=\ Ln
-" set statusline+=\ %l
-" set statusline+=,Col
-" set statusline+=\ %c
-" set statusline+=\ %Y
-
-" hi User1 ctermfg=008
-" hi User2 ctermfg=008
-" hi User3 ctermfg=008
-" hi User4 ctermfg=008
-" hi User5 ctermfg=008
-" hi User7 ctermfg=008
-" hi User8 ctermfg=008
-" hi User9 ctermfg=007
-
-" " Automatically change the statusline color depending on mode
-" function! ChangeStatuslineColor()
-"   if (mode() =~# '\v(n|no)')
-"     exe 'hi! StatusLine ctermfg=008'
-"   elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
-"     exe 'hi! StatusLine ctermfg=005'
-"   elseif (mode() ==# 'i')
-"     exe 'hi! StatusLine ctermfg=004'
-"   else
-"     exe 'hi! StatusLine ctermfg=006'
-"   endif
-
-"   return ''
-" endfunction
-
-" function! GitBranch()
-"   return system("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
-" endfunction
-
-" function! StatuslineGit()
-"   let l:branchname = GitBranch()
-"   return strlen(l:branchname) > 0?'  '.l:branchname.' ':''
-" endfunction
 
 " nerdtree
 nnoremap <C-n> :NERDTreeToggle<CR>
@@ -216,11 +179,14 @@ let g:startify_change_to_dir=0
 " END PLUGIN CONFIGURATIONS
 
 " color
-set background=dark
-colorscheme off
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+colorscheme tender
 " hi Comment ctermfg=DarkGray
 
-set clipboard=unnamedplus      " Use the systems clipboard
+set clipboard=unnamedplus  " Use the systems clipboard
 set number relativenumber
 set numberwidth=5
 
@@ -244,6 +210,16 @@ set cursorline             " Find the current line quickly.
 
 set wrapscan               " Searches wrap around end-of-file.
 set report=0               " Always report changed lines.
+
+set nobackup
+set nowritebackup
+
+" Settings recommended by coc README
+set cmdheight=2
+set updatetime=300
+
+set shortmess+=c
+set signcolumn=yes
 
 set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.ico
 set wildignore+=*.pdf,*.psd
@@ -277,3 +253,24 @@ function! <SID>SynStack()
   endif
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
+
+" Automatically create directory when saving file
+function s:MkNonExDir(file, buf)
+  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+      let dir=fnamemodify(a:file, ':h')
+      if !isdirectory(dir)
+      call mkdir(dir, 'p')
+    endif
+  endif
+endfunction
+augroup BWCCreateDir
+  autocmd!
+  autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+augroup END
+
+function ExecCurrentLineInTerminal()
+  let currentline = getline('.')
+  execute "!" . currentline
+endfunction
+
+nnoremap <leader>rl :call ExecCurrentLineInTerminal()<cr>
