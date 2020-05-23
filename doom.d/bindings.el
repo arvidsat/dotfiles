@@ -11,3 +11,8 @@
        )
       )
 )
+
+(evil-ex-define-cmd "W" #'evil-write)
+(evil-ex-define-cmd "Q" #'evil-quit)
+(evil-ex-define-cmd "Wq" #'evil-save-and-quit)
+(evil-ex-define-cmd "WQ" #'evil-save-and-quit)
