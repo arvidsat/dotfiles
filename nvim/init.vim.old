@@ -1,0 +1,133 @@
+" OPTIONS
+set number relativenumber
+
+set incsearch
+set nohlsearch
+
+set hidden
+set noerrorbells
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set expandtab
+set smartindent
+set nowrap
+set ignorecase
+set smartcase
+
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+
+set scrolloff=8
+
+set signcolumn=yes
+
+set clipboard=unnamedplus  " Use the systems clipboard
+
+set completeopt=menuone,noinsert,noselect
+set shortmess+=c
+
+if (has("termguicolors"))
+  set termguicolors
+endif
+
+"---- vim-plug setup  ----
+let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
+if has('win32')&&!has('win64')
+  let curl_exists=expand('C:\Windows\Sysnative\curl.exe')
+else
+  let curl_exists=expand('curl')
+endif
+
+if !filereadable(vimplug_exists)
+  if !executable(curl_exists)
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent exec "!"curl_exists" -fLo " . shellescape(vimplug_exists) . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  let g:not_finish_vimplug = "yes"
+
+  autocmd VimEnter * PlugInstall
+endif
+"-------- end vim-plug setup ----
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'nanotech/jellybeans.vim'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
+
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+
+Plug 'kyazdani42/nvim-web-devicons' " for file icons
+Plug 'kyazdani42/nvim-tree.lua'
+
+Plug 'norcalli/nvim-colorizer.lua'
+
+Plug 'tpope/vim-commentary'
+Plug 'tpope/fugitive.vim'
+Plug 'lewis6991/gitsigns.nvim'
+call plug#end()
+
+lua require('gitsigns').setup()
+lua require('colorizer').setup()
+
+" Automatically install missing plugins on startup
+autocmd VimEnter *
+  \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \|   PlugInstall --sync | q
+  \| endif
+
+colorscheme jellybeans
+
+" Remaps
+let mapleader = ' ' " Remap leader to space
+
+" NAVIGATION
+" Center cursor when scrolling
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+" Change windows width ctrl-hjkl
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+nnoremap <C-e> 5<C-e>
+nnoremap <C-y> 5<C-y>
+
+nnoremap <c-b> :NvimTreeToggle<CR>
+nnoremap <leader>bb :NvimTreeToggle<CR>
+nnoremap <leader>br :NvimTreeRefresh<CR>
+nnoremap <leader>bf :NvimTreeFindFile<CR>
+
+:command! WQ wq
+:command! Wq wq
+:command! W w
+:command! Q q
+
+nnoremap <leader>l :nohlsearch<cr>:diffupdate<cr>:syntax sync fromstart<cr><c-l>
+
+" Refactor word under cursor
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>//g<Left><Left>
+set inccommand=nosplit " Live updating when refactoring
+
+" Remove trailing white spaces
+nnoremap <leader>w :%s/\s\+$//e<CR>
+
+augroup highlight_yank
+  autocmd!
+  autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({ on_visual = false })
+augroup END
+
+" status bar
+luafile ~/.config/nvim/lua/statusline.lua
