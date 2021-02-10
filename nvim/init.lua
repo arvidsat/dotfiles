@@ -59,7 +59,6 @@ packer.startup(function()
     requires = { 'kyazdani42/nvim-web-devicons' }
   }
 
-  use { 'norcalli/nvim-colorizer.lua' }
 
   use { 'tpope/vim-commentary' }
 
@@ -72,6 +71,13 @@ packer.startup(function()
     'lewis6991/gitsigns.nvim',
     config = require('config.gitsigns').setup,
     requires = {'nvim-lua/plenary.nvim'}
+  }
+
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+    end
   }
 end)
 
