@@ -2,6 +2,11 @@ local utils = require('config.utils')
 
 vim.g.mapleader = " "
 
+function _G.dump(...)
+    local objects = vim.tbl_map(vim.inspect, {...})
+    print(unpack(objects))
+end
+
 local cmd = vim.cmd -- to execute Vim commands e.g. cmd('pwd')
 local fn = vim.fn -- to call Vim functions e.g. fn.bufnr()
 
@@ -24,10 +29,12 @@ local use = packer.use
 packer.startup(function()
   use { 'wbthomason/packer.nvim', opt = true }
 
-  use { 'nanotech/jellybeans.vim' }
+  use 'nanotech/jellybeans.vim'
+  use 'ayu-theme/ayu-vim'
 
   use { 
     'nvim-telescope/telescope.nvim',
+    -- '~/dev/neovim/telescope.nvim',
     config = function() 
       require('config.telescope').setup()
       require('config.telescope').config()
@@ -59,8 +66,8 @@ packer.startup(function()
     requires = { 'kyazdani42/nvim-web-devicons' }
   }
 
-
-  use { 'tpope/vim-commentary' }
+  use 'tpope/vim-commentary'
+  use 'jiangmiao/auto-pairs'
 
   use {
     'tpope/vim-fugitive',
@@ -79,6 +86,14 @@ packer.startup(function()
       require('colorizer').setup()
     end
   }
+
+  use { 'svermeulen/vim-yoink' }
+
+  -- Lua
+  use 'euclidianAce/BetterLua.vim'
+
+  use { '~/dev/neovim/pastry.nvim' }
+
 end)
 
 vim.o.termguicolors = true
@@ -178,3 +193,7 @@ cmd(':command! W w')
 cmd(':command! Q q')
 
 cmd('au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}')
+
+cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
+vim.o.updatetime=500
+

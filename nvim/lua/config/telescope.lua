@@ -4,10 +4,10 @@ local M = {}
 
 function M.setup()
     local builtins = require('telescope.builtin')
+    local themes = require('telescope.themes')
 
     local options = {
         shorten_path = false,
-        height = 10,
         layout_strategy = 'horizontal',
         layout_config = {preview_width = 0.65}
     }
@@ -27,7 +27,6 @@ function M.setup()
             ignore_current_buffer = true,
             sorter = require('telescope.sorters').get_substr_matcher(),
             shorten_path = true,
-            height = 10,
             layout_strategy = 'horizontal',
             layout_config = {preview_width = 0.65},
             show_all_buffers = true,
@@ -37,18 +36,23 @@ function M.setup()
     function _G.__telescope_grep()
         builtins.live_grep({
             shorten_path = false,
-            height = 10,
             layout_strategy = 'horizontal',
             layout_config = {preview_width = 0.4}
         })
     end
     function _G.__telescope_commits()
         builtins.git_commits({
-            height = 10,
             layout_strategy = 'horizontal',
             layout_config = {preview_width = 0.55}
         })
     end
+    function _G.__telescope_colorscheme()
+        builtins.colorscheme(themes.get_dropdown())
+    end
+
+    -- require('telescope').load_extension('yoink')
+    -- utils.map('n', '<Leader>fy', "<cmd>lua require('telescope').extensions.yoink.yoink()<CR>")
+
     utils.map('n', '<Leader>fb', '<cmd>lua __telescope_buffers()<CR>')
     utils.map('n', '<C-p>', '<cmd>lua __telescope_files()<CR>')
     utils.map('n', '<Leader>ff', '<cmd>lua __telescope_files()<CR>')
@@ -59,6 +63,9 @@ function M.setup()
       "<cmd>lua require('telescope.builtin').help_tags(options)<CR>"
     )
     utils.map('n', '<Leader>fc', '<cmd>lua __telescope_commits()<CR>')
+    utils.map('n', '<Leader>ft', "<cmd>lua __telescope_colorscheme()<CR>")
+    utils.map('n', '<C-f>', "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>")
+    utils.map('n', '<Leader>fr', "<cmd>lua require('telescope.builtin').registers()<CR>")
 end
 
 function M.config()
