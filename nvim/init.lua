@@ -33,7 +33,6 @@ packer.startup(function()
 
   use 'nanotech/jellybeans.vim'
   use 'ayu-theme/ayu-vim'
-  use 'sheerun/vim-polyglot'
 
   use { 
     'nvim-telescope/telescope.nvim',
@@ -104,6 +103,15 @@ packer.startup(function()
     end
   }
 
+  use 'editorconfig/editorconfig-vim'
+
+  use {
+    'haya14busa/incsearch.vim',
+    config = function()
+      require('config.incsearch').setup()
+    end
+  }
+
   -- Lua
   use 'euclidianAce/BetterLua.vim'
 
@@ -131,7 +139,6 @@ local opt = setmetatable({}, {
 })
 
 vim.o.inccommand = 'nosplit'
-vim.o.hlsearch = false
 vim.o.incsearch = true
 vim.o.ignorecase = true -- Ignore case
 vim.o.smartcase = true -- Don't ignore case with capitals
@@ -176,6 +183,8 @@ vim.wo.signcolumn = 'yes'
 
 vim.o.completeopt = 'menuone,noinsert,noselect' -- Completion options
 
+vim.o.cmdheight = 2
+
 -- Mappings
 local map = utils.map
 
@@ -213,8 +222,8 @@ cmd(':command! Q q')
 
 cmd('au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}')
 
--- cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
--- vim.o.updatetime=500
+cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
+vim.o.updatetime=500
 
   -- vim.g.startify_lists = {
   --   { type = 'dir',       header = { '   MRU ' .. vim.fn.getcwd() } },
