@@ -29,8 +29,11 @@ local use = packer.use
 packer.startup(function()
   use { 'wbthomason/packer.nvim', opt = true }
 
+  -- use 'airblade/vim-rooter'
+
   use 'nanotech/jellybeans.vim'
   use 'ayu-theme/ayu-vim'
+  use 'sheerun/vim-polyglot'
 
   use { 
     'nvim-telescope/telescope.nvim',
@@ -47,11 +50,16 @@ packer.startup(function()
     config = require('config.completion').setup
   }
 
-  use { 
-    'neovim/nvim-lspconfig',
-    config = require('config.lsp').config,
-    requires = {{'nvim-lua/lsp-status.nvim'}, {'nvim-lua/completion-nvim'}},
+  use {
+    'dense-analysis/ale',
+    setup = require('config.ale').setup
   }
+
+  -- use { 
+  --   'neovim/nvim-lspconfig',
+  --   config = require('config.lsp').config,
+  --   requires = {{'nvim-lua/lsp-status.nvim'}, {'nvim-lua/completion-nvim'}},
+  -- }
 
   use {
     'glepnir/galaxyline.nvim', 
@@ -88,6 +96,13 @@ packer.startup(function()
   }
 
   use { 'svermeulen/vim-yoink' }
+
+  use {
+    'mhinz/vim-startify',
+    config = function()
+      require('config.startify').config()
+    end
+  }
 
   -- Lua
   use 'euclidianAce/BetterLua.vim'
@@ -176,6 +191,10 @@ map('n', '<C-h>', '<C-w>h')
 map('n', '<C-j>', '<C-w>j')
 map('n', '<C-k>', '<C-w>k')
 map('n', '<C-l>', '<C-w>l')
+map('n', '<left>', '<C-w>h')
+map('n', '<down>', '<C-w>j')
+map('n', '<up>', '<C-w>k')
+map('n', '<right>', '<C-w>l')
 
 map('n', '<C-d>', '<C-d>zz')
 map('n', '<C-u>', '<C-u>zz')
@@ -194,6 +213,13 @@ cmd(':command! Q q')
 
 cmd('au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}')
 
-cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
-vim.o.updatetime=500
+-- cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
+-- vim.o.updatetime=500
 
+  -- vim.g.startify_lists = {
+  --   { type = 'dir',       header = { '   MRU ' .. vim.fn.getcwd() } },
+  --   { type = 'files',     header = { '   MRU'                     } },
+  --   { type = 'sessions',  header = { '   Sessions'                } },
+  --   { type = 'bookmarks', header = { '   Bookmarks'               } },
+  --   { type = 'commands',  header = { '   Commands'                } },
+  -- }

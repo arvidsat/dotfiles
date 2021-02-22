@@ -9,7 +9,8 @@ function M.setup()
     local options = {
         shorten_path = false,
         layout_strategy = 'horizontal',
-        layout_config = {preview_width = 0.65}
+        layout_config = {preview_width = 0.65},
+        hidden = true
     }
     function _G.__telescope_files()
         -- Launch file search using Telescope

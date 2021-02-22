@@ -21,4 +21,8 @@ function M.add_to_table(value, str, sep)
     return str ~= "" and table.concat({value, str}, sep) or value
 end
 
+function M.cwd_name()
+  return vim.fn.getcwd():match([[[%w%.-_]+$]])
+end
+
 return M
