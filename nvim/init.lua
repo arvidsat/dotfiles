@@ -33,10 +33,10 @@ packer.startup(function()
 
   use 'nanotech/jellybeans.vim'
   use 'ayu-theme/ayu-vim'
+  use 'sheerun/vim-polyglot'
 
   use { 
     'nvim-telescope/telescope.nvim',
-    -- '~/dev/neovim/telescope.nvim',
     config = function() 
       require('config.telescope').setup()
       require('config.telescope').config()
@@ -50,15 +50,10 @@ packer.startup(function()
   }
 
   use {
-    'dense-analysis/ale',
-    setup = require('config.ale').setup
+    'neoclide/coc.nvim',
+    branch = 'release',
+    config= require('config.coc').config
   }
-
-  -- use { 
-  --   'neovim/nvim-lspconfig',
-  --   config = require('config.lsp').config,
-  --   requires = {{'nvim-lua/lsp-status.nvim'}, {'nvim-lua/completion-nvim'}},
-  -- }
 
   use {
     'glepnir/galaxyline.nvim', 
@@ -225,10 +220,7 @@ cmd('au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}')
 cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
 vim.o.updatetime=500
 
-  -- vim.g.startify_lists = {
-  --   { type = 'dir',       header = { '   MRU ' .. vim.fn.getcwd() } },
-  --   { type = 'files',     header = { '   MRU'                     } },
-  --   { type = 'sessions',  header = { '   Sessions'                } },
-  --   { type = 'bookmarks', header = { '   Bookmarks'               } },
-  --   { type = 'commands',  header = { '   Commands'                } },
-  -- }
+-- Set filetypes
+cmd [[au BufNewFile,BufRead *.ts setlocal filetype=typescript]]
+cmd [[au BufNewFile,BufRead *.tsx setlocal filetype=typescript.tsx]]
+cmd [[au BufNewFile,BufRead *.jsx setlocal filetype=javascript.jsx]]
