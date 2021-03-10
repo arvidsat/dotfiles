@@ -33,7 +33,13 @@ packer.startup(function()
 
   use 'nanotech/jellybeans.vim'
   use 'ayu-theme/ayu-vim'
+  use 'danilo-augusto/vim-afterglow'
   use 'sheerun/vim-polyglot'
+  -- use {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   run = ':TSUpdate',
+  --   config = require('config.treesitter').config
+  -- }
 
   use { 
     'nvim-telescope/telescope.nvim',
@@ -69,7 +75,7 @@ packer.startup(function()
   }
 
   use 'tpope/vim-commentary'
-  use 'jiangmiao/auto-pairs'
+  -- use 'jiangmiao/auto-pairs'
 
   use {
     'tpope/vim-fugitive',
@@ -100,12 +106,18 @@ packer.startup(function()
 
   use 'editorconfig/editorconfig-vim'
 
-  use {
-    'haya14busa/incsearch.vim',
-    config = function()
-      require('config.incsearch').setup()
-    end
-  }
+  -- use {
+  --   'haya14busa/incsearch.vim',
+  --   config = function()
+  --     require('config.incsearch').setup()
+  --   end
+  -- }
+
+  -- use {
+  --   'easymotion/vim-easymotion',
+  --   config = function() require('config.easymotion') end
+  -- }
+  use { 'justinmk/vim-sneak' }
 
   -- Lua
   use 'euclidianAce/BetterLua.vim'
@@ -115,7 +127,7 @@ packer.startup(function()
 end)
 
 vim.o.termguicolors = true
-cmd 'colorscheme jellybeans'
+cmd 'colorscheme afterglow'
 
 vim.wo.number = true
 vim.wo.relativenumber = true
@@ -139,6 +151,7 @@ vim.o.ignorecase = true -- Ignore case
 vim.o.smartcase = true -- Don't ignore case with capitals
 vim.o.wrapscan = true -- Search wraps at end of file
 vim.o.scrolloff = 4 -- Lines of context
+vim.wo.wrap = false
 
 vim.o.hidden = true -- Enable modified buffers in background
 vim.o.splitbelow = true -- Put new windows below current
@@ -210,6 +223,10 @@ map('i', '<S-Tab>', 'pumvisible() ? "<C-p>" : "<S-Tab>"', { expr = true })
 map('i', '<C-j>', 'pumvisible() ? "<C-n>" : "<C-j>"', { expr = true })
 map('i', '<C-k>', 'pumvisible() ? "<C-p>" : "<C-k>"', { expr = true })
 
+map('n', '<leader>l', '<cmd>noh<CR>')    -- Clear highlights
+map('n', '<leader>o', 'm`o<Esc>``')  -- Insert a newline in normal mode
+map('n', '<leader>O', 'm`O<Esc>``')  -- Insert a newline in normal mode
+
 cmd(':command! WQ wq')
 cmd(':command! Wq wq')
 cmd(':command! W w')
@@ -217,8 +234,8 @@ cmd(':command! Q q')
 
 cmd('au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false}')
 
-cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
-vim.o.updatetime=500
+-- cmd [[au CursorHold * :exec 'match Search /\V\<' . expand('<cword>') . '\>/']]
+-- vim.o.updatetime=500
 
 -- Set filetypes
 cmd [[au BufNewFile,BufRead *.ts setlocal filetype=typescript]]

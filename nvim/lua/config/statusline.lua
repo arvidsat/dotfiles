@@ -4,17 +4,39 @@ local utils = require('config.utils')
 local gls = gl.section
 gl.short_line_list = {'defx', 'packager', 'vista', 'NvimTree'}
 
+-- local colors = {
+--     bg = '#282c34',
+--     fg = '#aab2bf',
+--     section_bg = '#38393f',
+--     blue = '#61afef',
+--     green = '#98c379',
+--     purple = '#c678dd',
+--     orange = '#e5c07b',
+--     red1 = '#e06c75',
+--     red2 = '#be5046',
+--     yellow = '#e5c07b',
+--     gray1 = '#5c6370',
+--     gray2 = '#2c323d',
+--     gray3 = '#3e4452',
+--     darkgrey = '#5c6370',
+--     grey = '#848586',
+--     middlegrey = '#8791A5'
+-- }
+-- selection = '#5a647e'
+-- comment = '#797979'
+-- window = '#4d5057'
+
 local colors = {
+    fg = '#d6d6d6',
     bg = '#282c34',
-    fg = '#aab2bf',
     section_bg = '#38393f',
-    blue = '#61afef',
-    green = '#98c379',
-    purple = '#c678dd',
-    orange = '#e5c07b',
-    red1 = '#e06c75',
-    red2 = '#be5046',
-    yellow = '#e5c07b',
+    green = '#b4c973',
+    blue = '#6c99bb',
+    purple = '#9e86c8',
+    orange = '#e5b567', -- e87d3e
+    red1 = '#ac4142',
+    red2 = '#b05279',
+    yellow = '#e5b567',
     gray1 = '#5c6370',
     gray2 = '#2c323d',
     gray3 = '#3e4452',
@@ -150,7 +172,7 @@ gls.left[13] = {
     DiagnosticInfo = {
         provider = 'DiagnosticInfo',
         icon = '  ',
-        highlight = {colors.blue, colors.section_bg},
+        highlight = {colors.blue, colors.bg},
         separator = ' ',
         separator_highlight = {colors.section_bg, colors.bg}
     }
@@ -212,9 +234,27 @@ gls.right[7] = {
 }
 
 -- Short status line
+-- gls.short_line_left[1] = {
+--     BufferType = {
+--         provider = 'FileTypeName',
+--         highlight = {colors.fg, colors.section_bg},
+--         separator = ' ',
+--         separator_highlight = {colors.section_bg, colors.bg}
+--     }
+-- }
 gls.short_line_left[1] = {
-    BufferType = {
-        provider = 'FileTypeName',
+    FileIcon = {
+        provider = {function() return '  ' end, 'FileIcon'},
+        condition = buffer_not_empty,
+        highlight = {
+            require('galaxyline.provider_fileinfo').get_file_icon,
+            colors.section_bg
+        }
+    }
+}
+gls.short_line_left[2] = {
+    FileName = {
+        provider = 'FileName',
         highlight = {colors.fg, colors.section_bg},
         separator = ' ',
         separator_highlight = {colors.section_bg, colors.bg}
